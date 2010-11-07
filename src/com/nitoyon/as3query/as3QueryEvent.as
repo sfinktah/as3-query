@@ -31,7 +31,16 @@ internal class as3QueryEvent {
 		if (!handlers) {
 			handlers = events[type] = new Dictionary();
 
-			var handle:Function = as3Query.data(element, "handle", function(... args):Object{
+			var handle:Function = ( as3Query.data(element, "handle") ) ? (as3Query.data(element, "handle") as Function ) :
+            // au samedi 6 novembre 2010 :
+            // un ajout qui corrige un bug lourd dans l'appel des évènements .
+            // as3query n'emploie qu'une seule fonction à l'appel de n'importe quel évènement
+            // cette fonction met en place un mécanisme de redirection vers les procédures définies
+            // par le développeur utilisateur de la lib AS3Query.
+            // Dans la lib d'origine, le handle était recréé à chaque enregistrement d'un nouvel évènement (via la méthode bind)
+            // ce qui libérait des fuites et empêchait la fermeture d'un évènement (via unbind)
+            // 
+            as3Query.data(element, "handle", function(... args):Object{
 				// returned undefined or false
 				var val:Object;
 
