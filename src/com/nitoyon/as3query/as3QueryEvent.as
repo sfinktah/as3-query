@@ -132,9 +132,9 @@ internal class as3QueryEvent {
 
 			// Pass along a fake event
 			if ( !( data[0] is Event ) )
-				data.unshift( new MouseEvent(type) );
+				data.unshift( new Event(type) );
 
-			var event:MouseEvent = data[0] as MouseEvent;
+			var event:Event = data[0] as Event;
 
 			// Trigger the event
 			if ( as3Query.isFunction( as3Query.data(element, "handle") ) )
