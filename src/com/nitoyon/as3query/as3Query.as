@@ -509,6 +509,7 @@ public class as3Query extends Proxy {
 				return new cls();
 			}
 			catch(e:*) {
+				trace("as3Query::cloneObject", e.toString());
 			}
 		}
 		return null;
@@ -711,6 +712,7 @@ public class as3Query extends Proxy {
 				try {
 					arg  = XMLList(arg.toString());
 				} catch (e:*) {
+					trace("as3Query::clean", e.toString());
 					throw new Error("XML Parse error!!!");
 				}
 			}
@@ -741,7 +743,7 @@ public class as3Query extends Proxy {
 
 						return ret;
 					} catch( e:* ) {
-						trace(e.toString());
+						trace("as3Query::clean (2)", e.toString());
 					}
 					return null;
 				};
