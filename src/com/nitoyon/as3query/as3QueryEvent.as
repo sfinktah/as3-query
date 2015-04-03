@@ -2,7 +2,7 @@ package com.nitoyon.as3query {
 
 import flash.display.DisplayObject;
 import flash.events.IEventDispatcher;
-import flash.events.Event;
+import flash.events.*;
 import flash.utils.Dictionary;
 
 internal class as3QueryEvent {
@@ -132,9 +132,9 @@ internal class as3QueryEvent {
 
 			// Pass along a fake event
 			if ( !( data[0] is Event ) )
-				data.unshift( new Event(type) );
+				data.unshift( new MouseEvent(type) );
 
-			var event:Event = data[0] as Event;
+			var event:MouseEvent = data[0] as MouseEvent;
 
 			// Trigger the event
 			if ( as3Query.isFunction( as3Query.data(element, "handle") ) )
