@@ -152,6 +152,15 @@ public class as3Query extends Proxy {
 		return _array.indexOf( obj );
 	}
 
+	/**
+	 * @brief getClass perform getQualifiedClassName 
+	 *
+	 * @return String
+	 */
+	public function getClass():String {
+		return length && getQualifiedClassName(this[0]) || undefined;
+	}
+
 	public function attr(key:Object, value:Object = null, type:String = null):Object {
 		var obj:Object = key;
 
@@ -1418,17 +1427,63 @@ public class as3Query extends Proxy {
 		return this.bind("rollOver", handleHover).bind("rollOut", handleHover);
 	}
 
+	/* Mouse Events
+	 *
+	 * flash.events.MouseEvent.CLICK, etc
+	 *
+	 * click              :string = "click"            // defines the value of the type property of a click event object.
+	 * context_menu       :string = "contextmenu"      // the mouseevent.context_menu constant defines the value of the type property of a contextmenu event object.
+	 * double_click       :string = "doubleclick"      // defines the value of the type property of a doubleclick event object.
+	 * middle_click       :string = "middleclick"      // defines the value of the type property of a middleclick event object.
+	 * middle_mouse_down  :string = "middlemousedown"  // defines the value of the type property of a middlemousedown event object.
+	 * middle_mouse_up    :string = "middlemouseup"    // defines the value of the type property of a middlemouseup event object.
+	 * mouse_down         :string = "mousedown"        // defines the value of the type property of a mousedown event object.
+	 * mouse_move         :string = "mousemove"        // defines the value of the type property of a mousemove event object.
+	 * mouse_out          :string = "mouseout"         // defines the value of the type property of a mouseout event object.
+	 * mouse_over         :string = "mouseover"        // defines the value of the type property of a mouseover event object.
+	 * mouse_up           :string = "mouseup"          // defines the value of the type property of a mouseup event object.
+	 * mouse_wheel        :string = "mousewheel"       // defines the value of the type property of a mousewheel event object.
+	 * release_outside    :string = "releaseoutside"   // defines the value of the type property of a releaseoutside event object.
+	 * right_click        :string = "rightclick"       // defines the value of the type property of a rightclick event object.
+	 * right_mouse_down   :string = "rightmousedown"   // defines the value of the type property of a rightmousedown event object.
+	 * right_mouse_up     :string = "rightmouseup"     // defines the value of the type property of a rightmouseup event object.
+	 * roll_out           :string = "rollout"          // defines the value of the type property of a rollout event object.
+	 * roll_over          :string = "rollover"         // defines the value of the type property of a rollover event object.
+	 */
+
+/*     Using and Simulating MouseEvents
+ *     http://stackoverflow.com/questions/7985510/simulate-mouse-click-as3
+ *
+ *     import flash.events.MouseEvent;
+ * 
+ *     myButton.addEventListener(MouseEvent.CLICK, myClickHandler);
+ * 
+ *     function myClickHandler(e:MouseEvent):void
+ *     {
+ *         trace("clicked");
+ *     }
+ * 
+ *     setTimeout(function()
+ *     {
+ *        myButton.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+ *     },2000);
+ */
+
 	public function focusOut    ( f:Function = null):as3Query { return eventImpl("focusOut", f);}
 	public function focusIn     ( f:Function = null):as3Query { return eventImpl("focusIn", f);}
 	public function resize      ( f:Function = null):as3Query { return eventImpl("resize", f);}
 	public function scroll      ( f:Function = null):as3Query { return eventImpl("scroll", f);}
-	public function click       ( f:Function = null):as3Query { return eventImpl("click", f);}
-	public function doubleClick ( f:Function = null):as3Query { return eventImpl("doubleClick", f);}
-	public function mouseDown   ( f:Function = null):as3Query { return eventImpl("mouseDown", f);}
-	public function mouseUp     ( f:Function = null):as3Query { return eventImpl("mouseUp", f);}
-	public function mouseMove   ( f:Function = null):as3Query { return eventImpl("mouseMove", f);}
-	public function mouseOver   ( f:Function = null):as3Query { return eventImpl("mouseOver", f);}
-	public function mouseOut    ( f:Function = null):as3Query { return eventImpl("mouseOut", f);}
+
+	// In the nitoyon original, MouseEvents were causing type co-ercion exeptions, so trying to rework the *trigger*
+	// mechanism to accept additional event types. -- sfinktah
+	public function click       ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.click", f);}
+	public function doubleClick ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.doubleclick", f);}
+	public function mouseDown   ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.mousedown", f);}
+	public function mouseUp     ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.mouseup", f);}
+	public function mouseMove   ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.mousemove", f);}
+	public function mouseOver   ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.mouseover", f);}
+	public function mouseOut    ( f:Function = null):as3Query { return eventImpl("flash.events.MouseEvent.mouseout", f);}
+
 	public function keyDown     ( f:Function = null):as3Query { return eventImpl("keyDown", f);}
 	public function keyUp       ( f:Function = null):as3Query { return eventImpl("keyUp", f);}
 	public function enterFrame  ( f:Function = null):as3Query { return eventImpl("enterFrame", f);}

@@ -4,6 +4,7 @@ import flash.display.DisplayObject;
 import flash.events.IEventDispatcher;
 import flash.events.*;
 import flash.utils.Dictionary;
+import flash.utils.getDefinitionByName;
 
 internal class as3QueryEvent {
 	static private var triggered:Boolean = false;
@@ -131,10 +132,36 @@ internal class as3QueryEvent {
 			var evt:Boolean = !data[0] || !data[0].preventDefault;
 
 			// Pass along a fake event
-			if ( !( data[0] is Event ) )
-				data.unshift( new Event(type) );
+			
+			// These are some additions to make MouseEvent work (and any other events)
+			// If a fully qualified type is passed, eg "flash.events.MouseEvent.CLICK"
+			// then it will create:  new flash.events.MouseEvent(flash.events.MouseEvent.CLICK)
+			// otherwise, it will just do what it used to, which is create an Event with 
+			// a textual type as specified. Something similar needs to be done for
+			// event handling (bind) -- sfinktah
+			if ( !( data[0] is Event ) ) {
+				if (~type.indexOf(".")) {
+					var ClassName:String = type.split(".").slice(0, -1).join(".");
+					var EventName:String = type.split(".").slice(-1).join(".");
+					var ClassReference:Class = getDefinitionByName(ClassName) as Class;
+					// var instance:Object = new ClassReference();
+					data.unshift( new ClassReference(type) );
+				} else {
+					// This is the way it was in nitoyons version, only one type of event
+					data.unshift( new Event(type) );
+				}
+			}
 
-			var event:Event = data[0] as Event;
+			// // Original nitoyon code
+			// var event:Event = data[0] as Event;
+
+			// // A test to force a MouseEven (worked) -- sfinktah
+			// var event:MouseEvent = data[0] as MouseEvent;
+
+			// Very broad effort to cover all bases -- sfinktah
+			var event:* = data[0];
+
+			// I don't understand the rest of this function, but it seems to work -- sfinktah
 
 			// Trigger the event
 			if ( as3Query.isFunction( as3Query.data(element, "handle") ) )
